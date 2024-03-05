@@ -144,6 +144,7 @@ select datepart(WEEKDAY, SYSDATETIME());
 
 -- let's create create view --
 
+go
 CREATE VIEW [CHANGE OF AMOUNT] 
 AS
 select amount, id,referalid,
@@ -154,4 +155,24 @@ case
 	else amount -(amount-amount)
 	end as [increase amount]
 from myproject1.dbo.transactionss
+go
 
+-- LET'S UPDATE THE VIEW ADDADING THE TRANSACTIONID TO THE STATEMENT --
+use myproject1
+go
+create or alter view [CHANGE OF AMOUNT] 
+as 
+select amount, id,referalid , transacid,
+case
+	when id=2 then amount+(AMOUNT *.20)
+	when id=3 then amount +(AMOUNT *.15)
+	when id=1 then amount+(AMOUNT*.6)
+	else amount -(amount-amount)
+	end as [increase amount]
+from myproject1.dbo.transactionss
+go
+-- let's create a view wher the mount is higher than the average mount --
+
+create view [higher amount  than avg]as
+select *from myproject1.dbo.transactionss
+where amount >(select avg(amount)from myproject1.dbo.transactionss)
